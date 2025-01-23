@@ -17,6 +17,13 @@ public class OrderTradeServiceImpl implements OrderTradeService {
     @Autowired
     private OrderTradeMapper orderTradeMapper;
 
+    /**
+     * Creates a new order trade based on the provided request.
+     *
+     * @param request The order trade save request containing trade details
+     * @return A response containing the ID of the newly created order trade
+     * @throws RuntimeException if the request fails validation (invalid userId or totalAmount)
+     */
     @Override
     public Response<Long> create(final OrderTradeSaveRequest request) {
 
@@ -35,6 +42,13 @@ public class OrderTradeServiceImpl implements OrderTradeService {
         return Response.toResponse(orderTrade.getId());
     }
 
+    /**
+     * Validates the order trade save request by checking the user ID and total amount.
+     *
+     * @param request The order trade save request to validate
+     * @throws RuntimeException if the user ID is less than or equal to zero
+     * @throws RuntimeException if the total amount is less than or equal to zero
+     */
     private void validate(OrderTradeSaveRequest request) {
         if(request.getUserId() <= 0){
             throw new RuntimeException("userId illegal");
