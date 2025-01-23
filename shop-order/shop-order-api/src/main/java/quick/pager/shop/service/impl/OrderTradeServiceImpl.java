@@ -9,6 +9,8 @@ import quick.pager.shop.service.OrderTradeService;
 import quick.pager.shop.user.response.Response;
 import quick.pager.shop.utils.DateUtils;
 
+import java.math.BigDecimal;
+
 @Service
 public class OrderTradeServiceImpl implements OrderTradeService {
 
@@ -18,6 +20,7 @@ public class OrderTradeServiceImpl implements OrderTradeService {
     @Override
     public Response<Long> create(final OrderTradeSaveRequest request) {
 
+        validate(request);
         OrderTrade orderTrade = new OrderTrade();
         orderTrade.setUserId(request.getUserId());
         orderTrade.setOutTradeNo(request.getOutTradeNo());
@@ -30,5 +33,15 @@ public class OrderTradeServiceImpl implements OrderTradeService {
         orderTrade.setDeleteStatus(Boolean.FALSE);
         orderTradeMapper.insert(orderTrade);
         return Response.toResponse(orderTrade.getId());
+    }
+
+    private void validate(OrderTradeSaveRequest request) {
+        if(request.getUserId() <= 0){
+            throw new RuntimeException("userId illegal");
+        }
+
+        if(request.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0){
+            throw new RuntimeException("totalAmount illegal");
+        }
     }
 }
